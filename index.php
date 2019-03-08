@@ -7,24 +7,30 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
 <body>
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <div id="db-info-dialog" title="Database Connection" style="display:none;">
-        <h3>Database Credentials:</h3>
-        <form action="" method="post">
-            <fieldset>
-                <label for="dbname">Name:</label><br>
-                <input type="text" name="dbname" id="dbname" required>
-                <br>
-                <label for="dbuser">User:</label><br>
-                <input type="text" name="dbuser" id="dbuser" required>
-                <br>
-                <label for="dbpwd">Password:</label><br>
-                <input type="password" id="dbpwd" name="dbpwd">
-                <br>
-                <input type="submit">
-            </fieldset>
-        </form>
-    </div>
+    <div class="container-fluid h-100 d-flex">
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <div id="db-info-dialog" style="display:none;">
+            <div class="card p-2 m-2">
+                <h3>Database Credentials</h3>
+                <form action="" method="post">
+                    <div class="form-group">
+                        <label for="dbname">Database Name:</label>
+                        <input type="text" name="dbname" id="dbname" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="dbuser">User:</label>
+                        <input type="text" name="dbuser" id="dbuser" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="dbpwd">Password:</label>
+                        <input type="password" id="dbpwd" name="dbpwd" class="form-control">
+                    </div>
+                    <div class="form-group w-100">
+                        <input type="submit" class="from-control w-100" value="Login">
+                    </div>
+                </form>
+            </div>
+        </div>
 <?php
     try {
         if(empty($_REQUEST['dbname']) || empty($_REQUEST['dbuser'])){
@@ -49,7 +55,6 @@
         <?php
     }
 ?>
-    <div class="container-fluid h-100 d-flex">
         <div class="w-100 h-100 d-flex flex-column">
             <div class="row">
                 <header class="col-md-12 p-0">
