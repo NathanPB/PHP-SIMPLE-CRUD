@@ -49,7 +49,7 @@
         ?>
             <script>
                 window.alert(`Falha ao Conectar\n<?= $erro->getMessage()?>`);
-                window.location.href = window.location.href;
+                window.location.href = window.location.href; //Atualiza a página
             </script>
 
         <?php
@@ -82,7 +82,7 @@
                                         <h3 class="p-1 text-secondary">Clientes</h3>
                                     </div>
                                     <div class="col-md-1">
-                                        <h3 class="p-1 text-success button-add" data-placement="top" data-toggle="tooltip" title="Novo Cliente">
+                                        <h3 class="p-1 text-success button-raw-text" data-placement="top" data-toggle="tooltip" title="Novo Cliente">
                                             <span>+</span>
                                         </h3>
                                     </div>
@@ -94,9 +94,38 @@
                                     <tr>
                                         <th>#</th>
                                         <th>Nome</th>
-                                        <th>Contato</th>
+                                        <th>CPF</th>
                                     </tr>
                                     </thead>
+                                    <tbody>
+                                        <?php
+                                            $statement = $conexao->prepare('SELECT * FROM pessoa');
+                                            if($statement->execute()){
+                                                while ($rs = $statement->fetch(PDO::FETCH_OBJ)){
+                                                ?>
+                                                    <tr>
+                                                        <td><?=$rs->id?></td>
+                                                        <td><?=$rs->nome?></td>
+                                                        <td>
+                                                            <?php
+                                                                $cpf = $rs->cpf;
+                                                                echo substr($cpf, 0, 3).
+                                                                    '.'.substr($cpf, 3, 3).
+                                                                    '.'.substr($cpf, 6, 3).
+                                                                    '-'.substr($cpf, 9, 2);
+                                                            ?>
+                                                        </td>
+                                                        <td>
+                                                            <!-- TODO botões de controle (apagar e editar) -->
+                                                        </td>
+                                                    </tr>
+                                                <?php
+                                                }
+                                            } else {
+                                                echo '<h4 class="text-error">Não foi ler a lista de clientes</h4>';
+                                            }
+                                        ?>
+                                    </tbody>
                                 </table>
                             </div>
                         </div>
