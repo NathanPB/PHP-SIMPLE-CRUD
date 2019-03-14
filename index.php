@@ -122,7 +122,7 @@
                                                 <?php
                                                 }
                                             } else {
-                                                echo '<h4 class="text-error">Não foi ler a lista de clientes</h4>';
+                                                echo '<h4 class="text-error">Não foi possível ler a lista de clientes</h4>';
                                             }
                                         ?>
                                     </tbody>
