@@ -4,10 +4,10 @@
 Pequeno software genérico baseado em web que permite administrar uma lista de clientes.
 
 ## Riscos
--  Prazos
-- Experiência com Versionamento
-- Experiência com Gerência de Software
-- Experiência com Desenvolvimento
+| Risco | Afeta | Descrição |
+|-------|-------|-----------|
+| Problemas no ambiente de execução | Projeto e Negócio | Pode gerar atrásos devido a problemas inesperados |
+| Inexperiência | Projeto e Negócio | Inexperiência da equipe com desenvolvimento, gerência ou versionamento |
 
 ## Organização do Grupo
 |      Nome     |               Função              |
