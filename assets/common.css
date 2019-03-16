@@ -11,3 +11,18 @@ html, body {
     cursor: pointer;
     user-select: none;
 }
+
+#notification-container {
+    display: flex;
+    max-height: 100%;
+    flex-direction: column-reverse;
+    overflow-y: auto;
+}
+
+#notification-container::-webkit-scrollbar {
+    display: none;
+}
+
+header {
+    z-index: 1;
+}
