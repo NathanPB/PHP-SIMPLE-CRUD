@@ -1,3 +1,6 @@
+<?php
+    include_once 'includes/authentication.php'
+?>
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -8,7 +11,6 @@
 </head>
 <body>
     <div class="container-fluid h-100 d-flex">
-        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
         <div id="db-info-dialog" style="display:none;">
             <div class="card p-2 m-2">
                 <h3>Database Credentials</h3>
@@ -31,30 +33,6 @@
                 </form>
             </div>
         </div>
-<?php
-    try {
-        if(empty($_REQUEST['dbname']) || empty($_REQUEST['dbuser'])){
-    ?>
-        <script>
-          document.querySelector('#db-info-dialog').style.display = 'initial';
-          window.stop();
-        </script>
-    <?php
-        }
-
-        $conexao = new PDO("mysql:host=localhost;dbname={$_REQUEST['dbname']}", $_REQUEST['dbuser'], $_REQUEST['dbpwd']);
-        $conexao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $conexao->exec("set names utf8");
-    } catch (PDOException $erro) {
-        ?>
-            <script>
-                window.alert(`Falha ao Conectar\n<?= $erro->getMessage()?>`);
-                window.location.href = window.location.href; //Atualiza a página
-            </script>
-
-        <?php
-    }
-?>
         <div class="w-100 h-100 d-flex flex-column">
             <div class="row">
                 <header class="col-md-12 p-0">
@@ -99,7 +77,7 @@
                                     </thead>
                                     <tbody>
                                         <?php
-                                            $statement = $conexao->prepare('SELECT * FROM pessoa');
+                                            $statement = $db->prepare('SELECT * FROM clientes');
                                             if($statement->execute()){
                                                 while ($rs = $statement->fetch(PDO::FETCH_OBJ)){
                                                 ?>
@@ -134,8 +112,10 @@
             </div>
         </div>
     </div>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script>$('[data-toggle="tooltip"]').tooltip()</script>
+
 </body>
 </html>

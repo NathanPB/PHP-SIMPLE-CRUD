@@ -6,22 +6,12 @@
  * Time: 20:57
  */
 
-try {
-    $conexao = new PDO("mysql:host=localhost;dbname=simple_php_crud", "root", "");
-    $conexao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $conexao->exec("set names utf8");
-} catch (PDOException $erro) {
-    ?>
-    <script>
-        window.alert(`Falha ao Conectar\n<?= $erro->getMessage()?>`);
-    </script>
-
-    <?php
-}
+include_once '../../../includes/api.php';
+include_once '../../../includes/authentication.php';
 
 try {
     if(!empty($_REQUEST['nome']) && !empty($_REQUEST['cpf']) && !empty($_REQUEST['nascimento'])){
-        $sth = $conexao->prepare('INSERT INTO PESSOA (nome, cpf, nascimento) values (?, ?, ?)');
+        $sth = $db->prepare('INSERT INTO clientes (nome, cpf, nascimento) values (?, ?, ?)');
         $sth->execute(array($_REQUEST['nome'], $_REQUEST['cpf'], $_REQUEST['nascimento']));
     } else {
         echo 'missing parameters';
