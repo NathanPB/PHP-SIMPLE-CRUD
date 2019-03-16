@@ -13,10 +13,11 @@ try {
     if(!empty($_REQUEST['nome']) && !empty($_REQUEST['cpf']) && !empty($_REQUEST['nascimento'])){
         $sth = $db->prepare('INSERT INTO clientes (nome, cpf, nascimento) values (?, ?, ?)');
         $sth->execute(array($_REQUEST['nome'], $_REQUEST['cpf'], $_REQUEST['nascimento']));
+        echo '{"message":"success"}';
     } else {
-        echo 'missing parameters';
+        echo '{"message":"missing parameters"}';
     }
 } catch (PDOException $ex) {
-    echo $ex->getMessage();
+    echo '{"message":"'.$ex->getMessage().'"}';
 }
 ?>

@@ -11,28 +11,6 @@
 </head>
 <body>
     <div class="container-fluid h-100 d-flex">
-        <div id="db-info-dialog" style="display:none;">
-            <div class="card p-2 m-2">
-                <h3>Database Credentials</h3>
-                <form action="" method="post">
-                    <div class="form-group">
-                        <label for="dbname">Database Name:</label>
-                        <input type="text" name="dbname" id="dbname" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="dbuser">User:</label>
-                        <input type="text" name="dbuser" id="dbuser" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="dbpwd">Password:</label>
-                        <input type="password" id="dbpwd" name="dbpwd" class="form-control">
-                    </div>
-                    <div class="form-group w-100">
-                        <input type="submit" class="from-control w-100" value="Login">
-                    </div>
-                </form>
-            </div>
-        </div>
         <div class="w-100 h-100 d-flex flex-column">
             <div class="row">
                 <header class="col-md-12 p-0">
@@ -49,7 +27,9 @@
             </div>
             <div class="row" style="flex-grow: 1">
                 <div class="col-md-2 bg-primary left-menu">
+                    <div class="w-100 h-100 p-1" id="notification-container">
 
+                    </div>
                 </div>
                 <div class="col-md-10">
                     <div class="main-container">
@@ -61,7 +41,7 @@
                                     </div>
                                     <div class="col-md-1">
                                         <h3 class="p-1 text-success button-raw-text" data-placement="top" data-toggle="tooltip" title="Novo Cliente">
-                                            <span>+</span>
+                                            <span data-toggle="modal" data-target="#modalAdicionarClientes">+</span>
                                         </h3>
                                     </div>
                                 </div>
@@ -112,10 +92,77 @@
             </div>
         </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+
+    <div class="modal" tabindex="-1" role="dialog" id="modalAdicionarClientes">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Adicionar Cliente</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="formAdicionarClientes">
+                        <div class="form-group">
+                            <label for="inputAdicionarNome">Nome:</label>
+                            <input type="text" class="form-control" name="nome" id="inputAdicionarNome" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputAdicionarCPF">CPF:</label>
+                            <input type="text" class="form-control" name="cpf" id="inputAdicionarCPF" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputAdicionarNascimento">Data de Nascimento:</label>
+                            <input type="date" class="form-control" name="nascimento" id="inputAdicionarNascimento" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" form="formAdicionarClientes" class="btn btn-primary">Enviar</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
+    <script src="assets/notifications.js"></script>
     <script>$('[data-toggle="tooltip"]').tooltip()</script>
+    <script>
+        $('#inputAdicionarCPF').mask('000.000.000-00');
+        $('#formAdicionarClientes').on('submit', function(e){
+            e.preventDefault();
+
+            let cpf = this.cpf.value.replace('.', '').replace('.', '').replace('-', '');
+            if(cpf.length !== 11){
+                sendNotification("CPF Inválido!", "alert-danger")
+            } else {
+                let name = this.nome.value;
+                $.ajax({
+                    url: `api/cliente/adicionar/?nome=${name}&cpf=${cpf}&nascimento=${this.nascimento.value}`,
+                    success: function(responseText){
+                        try {
+                            let msg = JSON.parse(responseText).message;
+                            if(msg === 'success'){
+                                sendNotification(`Cliente ${name} adicionado com sucesso!`, "alert-success")
+                            } else {
+                                throw msg;
+                            }
+                        } catch (exception) {
+                            sendNotification(`Falha ao adicionar ${name}: ${exception}`, "alert-danger")
+                        }
+                    },
+                    error: function () {
+                        sendNotification(`Falha ao adicionar ${name}: Unauthorized`, "alert-danger")
+                    }
+                })
+            }
+        })
+    </script>
 
 </body>
 </html>
