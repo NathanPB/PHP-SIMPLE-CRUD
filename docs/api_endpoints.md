@@ -2,7 +2,7 @@
 
 ## Autenticação
 
-###Credencial
+### Credencial
     {usuario}:{senha} em base64
     
 Exemplo:
