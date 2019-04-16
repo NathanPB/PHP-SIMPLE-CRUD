@@ -1,0 +1,22 @@
+.contact-list-wrapper {
+    overflow: auto;
+}
+
+.contact-list {
+    max-height: 36px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.contact-list > li:before {
+    padding-right: 0.5em;
+}
+
+.contact-email:before {
+    content: '📧'; /* Hidden Envelope unicode that is not displaying */
+}
+
+.contact-phone:before {
+    content: '📞'; /* Hidden Telephone Receiver unicode that is not displaying */
+}

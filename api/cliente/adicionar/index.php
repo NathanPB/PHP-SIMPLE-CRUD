@@ -11,13 +11,26 @@ include_once '../../../includes/authentication.php';
 
 try {
     if(!empty($_REQUEST['nome']) && !empty($_REQUEST['cpf']) && !empty($_REQUEST['nascimento'])){
-        $sth = $db->prepare('INSERT INTO clientes (nome, cpf, nascimento) values (?, ?, ?)');
-        $sth->execute(array($_REQUEST['nome'], $_REQUEST['cpf'], $_REQUEST['nascimento']));
-        echo '{"message":"success"}';
+        if(!empty($_REQUEST['telefone']) || !empty($_REQUEST['email'])){
+            $sth = $db->prepare('INSERT INTO clientes (nome, cpf, nascimento) values (?, ?, ?)');
+            $sth->execute(array($_REQUEST['nome'], $_REQUEST['cpf'], $_REQUEST['nascimento']));
+
+            if(!empty($_REQUEST['email'])){
+                $sth = $db->prepare("INSERT INTO email (cliente, email) values ((select id from clientes where cpf = ?), ?)");
+                $sth->execute(array($_REQUEST['cpf'], $_REQUEST['email']));
+            }
+            if(!empty($_REQUEST['telefone'])){
+                $sth = $db->prepare("INSERT INTO telefone (cliente, telefone) values ((select id from clientes where cpf = ?), ?)");
+                $sth->execute(array($_REQUEST['cpf'], $_REQUEST['telefone']));
+            }
+            echo '{"message":"success"}';
+        } else {
+            throw new Exception('no initial email or phone number provided');
+        }
     } else {
-        echo '{"message":"missing parameters"}';
+        throw new Exception('missing parameters');
     }
-} catch (PDOException $ex) {
+} catch (Exception $ex) {
     echo '{"message":"'.$ex->getMessage().'"}';
 }
 ?>

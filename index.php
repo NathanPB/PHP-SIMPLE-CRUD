@@ -8,6 +8,7 @@
     <title>CRUD Básico PHP</title>
     <link rel="stylesheet" href="assets/common.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="assets/index.css"/>
 </head>
 <body>
     <div class="container-fluid h-100 d-flex">
@@ -53,6 +54,7 @@
                                         <th>#</th>
                                         <th>Nome</th>
                                         <th>CPF</th>
+                                        <th>Contatos</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -72,6 +74,28 @@
                                                                     '.'.substr($cpf, 6, 3).
                                                                     '-'.substr($cpf, 9, 2);
                                                             ?>
+                                                        </td>
+                                                        <td class="contact-list-wrapper">
+                                                            <ul class="contact-list">
+                                                                <?php
+                                                                $statementContacts = $db->prepare('select email from email where cliente = ?');
+                                                                if($statementContacts->execute(array($rs->id))){
+                                                                    while($rsTelefones = $statementContacts->fetch(PDO::FETCH_OBJ)){
+                                                                        ?>
+                                                                        <li class="contact-email"><?=$rsTelefones->email?></li>
+                                                                        <?php
+                                                                    }
+                                                                };
+                                                                $statementContacts = $db->prepare('select telefone from telefone where cliente = ?');
+                                                                if($statementContacts->execute(array($rs->id))){
+                                                                    while($rsTelefones = $statementContacts->fetch(PDO::FETCH_OBJ)){
+                                                                        ?>
+                                                                        <li class="contact-phone"><?=$rsTelefones->telefone?></li>
+                                                                        <?php
+                                                                    }
+                                                                };
+                                                                ?>
+                                                            </ul>
                                                         </td>
                                                         <td>
                                                             <!-- TODO botões de controle (apagar e editar) -->
@@ -115,6 +139,14 @@
                         <div class="form-group">
                             <label for="inputAdicionarNascimento">Data de Nascimento:</label>
                             <input type="date" class="form-control" name="nascimento" id="inputAdicionarNascimento" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputAdicionarTelefone">Telefone:</label>
+                            <input type="number" class="form-control" name="telefone" id="inputAdicionarTelefone">
+                        </div>
+                        <div class="form-group">
+                            <label for="inputAdicionarEmail">Email:</label>
+                            <input type="email" class="form-control" name="email" id="inputAdicionarEmail">
                         </div>
                     </form>
                 </div>
