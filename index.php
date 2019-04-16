@@ -175,7 +175,7 @@
             } else {
                 let name = this.nome.value;
                 let email = this.email.value;
-                let telefone = this.telefone.value.
+                let telefone = this.telefone.value;
                 $.ajax({
                     url: `api/cliente/adicionar/?nome=${name}&cpf=${cpf}&nascimento=${this.nascimento.value}${email && '&email='.email}${telefone && '&telefone='.telefone}`,
                     success: function(responseText){
