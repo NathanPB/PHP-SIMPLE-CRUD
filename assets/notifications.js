@@ -6,10 +6,13 @@ function sendNotification(text, clasz){
     notification.classList.add(clasz);
     notification.innerText = text;
     notification.role = "alert";
+    sendNotificationNode(notification);
+}
 
-    notificationsContainer.append(notification);
+function sendNotificationNode(node) {
+    notificationsContainer.append(node);
     if(notificationsContainer.children().length === 1){
-        proccessNotification(notification);
+        proccessNotification(node);
     }
 }
 

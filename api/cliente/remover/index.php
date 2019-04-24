@@ -11,6 +11,12 @@ include_once '../../../includes/authentication.php';
 
 try {
     if(!empty($_REQUEST['id'])){
+        $sth = $db->prepare('DELETE FROM email where cliente = ?');
+        $sth->execute(array($_REQUEST['id']));
+
+        $sth = $db->prepare('DELETE FROM telefone where cliente = ?');
+        $sth->execute(array($_REQUEST['id']));
+
         $sth = $db->prepare('DELETE FROM clientes where id = ?');
         $sth->execute(array($_REQUEST['id']));
         echo '{"message":"success"}';

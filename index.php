@@ -55,9 +55,10 @@
                                         <th>Nome</th>
                                         <th>CPF</th>
                                         <th>Contatos</th>
+                                        <th>Controle</th>
                                     </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody id="costumers-container">
                                         <?php
                                             $statement = $db->prepare('SELECT * FROM clientes');
                                             if($statement->execute()){
@@ -98,6 +99,7 @@
                                                             </ul>
                                                         </td>
                                                         <td>
+                                                            <button class="btn btn-danger" onclick="apagarCliente('<?= $rs->id ?>', this)">✗</button>
                                                             <!-- TODO botões de controle (apagar e editar) -->
                                                         </td>
                                                     </tr>
@@ -182,7 +184,8 @@
                         try {
                             let msg = JSON.parse(responseText).message;
                             if(msg === 'success'){
-                                sendNotification(`Cliente ${name} adicionado com sucesso!`, "alert-success")
+                                sendNotification(`Cliente ${name} adicionado com sucesso!`, "alert-success");
+                                refreshKeepData();
                             } else {
                                 throw msg;
                             }
@@ -195,7 +198,34 @@
                     }
                 })
             }
-        })
+        });
+
+        function apagarCliente(id, element) {
+            $.ajax({
+                url: `api/cliente/remover/?id=${id}`,
+                success: function(response) {
+                    let r = JSON.parse(response);
+                    if(r.message === 'success'){
+                        sendNotification(`Cliente ${id} removido com sucesso`, 'alert-success');
+                    } else {
+                        sendNotification(r.message, 'alert-warning');
+                    }
+                    element.parentElement.parentElement.remove();
+                },
+                error: function(response){
+                    sendNotification(response, 'alert-danger')
+                }
+            })
+        }
+
+        function refreshKeepData(){
+            window.sessionStorage.notifications = notificationsContainer;
+            location.reload(true);
+        }
+
+        window.addEventListener('load', () => {
+           window.sessionStorage.notifications.forEach(it => sendNotificationNode(it));
+        });
     </script>
 
 </body>
