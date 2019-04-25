@@ -100,7 +100,7 @@
                                                         </td>
                                                         <td>
                                                             <button class="btn btn-danger" onclick="apagarCliente('<?= $rs->id ?>', this)">✗</button>
-                                                            <!-- TODO botões de controle (apagar e editar) -->
+                                                            <button class="btn btn-primary" onclick='editarCliente("<?= $rs->id ?>", <?= json_encode(array("nome" => $rs->nome, "cpf" => $rs->cpf, "nascimento" => $rs->nascimento)) ?>)' data-toggle="modal" data-target="#modalEditarClientes">✎</button>
                                                         </td>
                                                     </tr>
                                                 <?php
@@ -159,6 +159,39 @@
             </div>
         </div>
     </div>
+    <div class="modal" tabindex="-1" role="dialog" id="modalEditarClientes">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Editar Cliente</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="formEditarClientes">
+                        <input name="id" id="inputEditarId" hidden/>
+                        <div class="form-group">
+                            <label for="inputAdicionarNome">Nome:</label>
+                            <input type="text" class="form-control" name="nome" id="inputEditarNome" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputAdicionarCPF">CPF:</label>
+                            <input type="text" class="form-control" name="cpf" id="inputEditarCPF" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputAdicionarNascimento">Data de Nascimento:</label>
+                            <input type="date" class="form-control" name="nascimento" id="inputEditarNascimento" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" form="formEditarClientes" class="btn btn-primary">Enviar</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
@@ -168,6 +201,8 @@
     <script>$('[data-toggle="tooltip"]').tooltip()</script>
     <script>
         $('#inputAdicionarCPF').mask('000.000.000-00');
+        $('#inputEditarCPF').mask('000.000.000-00');
+
         $('#formAdicionarClientes').on('submit', function(e){
             e.preventDefault();
 
@@ -199,6 +234,34 @@
                 })
             }
         });
+        $('#formEditarClientes').on('submit', function(e){
+            e.preventDefault();
+
+            let cpf = this.cpf.value.replace('.', '').replace('.', '').replace('-', '');
+            if(cpf.length !== 11){
+                sendNotification("CPF Inválido!", "alert-danger")
+            } else {
+                $.ajax({
+                    url: `api/cliente/adicionar/?id=${this.id.value}&nome=${this.nome.value}&cpf=${cpf}&nascimento=${this.nascimento.value}`,
+                    success: function(responseText){
+                        try {
+                            let msg = JSON.parse(responseText).message;
+                            if(msg === 'success'){
+                                sendNotification(`Cliente ${name} editado com sucesso!`, "alert-success");
+                                refreshKeepData();
+                            } else {
+                                throw msg;
+                            }
+                        } catch (exception) {
+                            sendNotification(`Falha ao editar ${name}: ${exception}`, "alert-danger")
+                        }
+                    },
+                    error: function () {
+                        sendNotification(`Falha ao editar ${name}: Unauthorized`, "alert-danger")
+                    }
+                })
+            }
+        });
 
         function apagarCliente(id, element) {
             $.ajax({
@@ -216,6 +279,13 @@
                     sendNotification(response, 'alert-danger')
                 }
             })
+        }
+
+        function editarCliente(id, data){
+            $('#inputEditarId').val(id);
+            $('#inputEditarNome').val(data.nome);
+            $('#inputEditarCPF').val(data.cpf);
+            $('#inputEditarNascimento').val(data.nascimento);
         }
 
         function refreshKeepData(){
