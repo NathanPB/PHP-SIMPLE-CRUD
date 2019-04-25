@@ -237,27 +237,28 @@
         $('#formEditarClientes').on('submit', function(e){
             e.preventDefault();
 
+            let nome = this.nome.value;
             let cpf = this.cpf.value.replace('.', '').replace('.', '').replace('-', '');
             if(cpf.length !== 11){
                 sendNotification("CPF Inválido!", "alert-danger")
             } else {
                 $.ajax({
-                    url: `api/cliente/adicionar/?id=${this.id.value}&nome=${this.nome.value}&cpf=${cpf}&nascimento=${this.nascimento.value}`,
+                    url: `api/cliente/adicionar/?id=${this.id.value}&nome=${nome}&cpf=${cpf}&nascimento=${this.nascimento.value}`,
                     success: function(responseText){
                         try {
                             let msg = JSON.parse(responseText).message;
                             if(msg === 'success'){
-                                sendNotification(`Cliente ${name} editado com sucesso!`, "alert-success");
+                                sendNotification(`Cliente ${nome} editado com sucesso!`, "alert-success");
                                 refreshKeepData();
                             } else {
                                 throw msg;
                             }
                         } catch (exception) {
-                            sendNotification(`Falha ao editar ${name}: ${exception}`, "alert-danger")
+                            sendNotification(`Falha ao editar ${nome}: ${exception}`, "alert-danger")
                         }
                     },
                     error: function () {
-                        sendNotification(`Falha ao editar ${name}: Unauthorized`, "alert-danger")
+                        sendNotification(`Falha ao editar ${nome}: Unauthorized`, "alert-danger")
                     }
                 })
             }
