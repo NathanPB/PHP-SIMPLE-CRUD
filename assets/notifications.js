@@ -26,3 +26,11 @@ function proccessNotification(notification){
         });
     });
 }
+
+function sendPersistentNotification(data){
+    let notification = document.createElement('div');
+    notification.className = data.classes;
+    notification.innerText = data.text;
+    notification.role = "alert";
+    sendNotificationNode(notification);
+};

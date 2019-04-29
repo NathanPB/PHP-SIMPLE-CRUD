@@ -290,13 +290,15 @@
         }
 
         function refreshKeepData(){
-            window.sessionStorage.notifications = notificationsContainer;
+            window.sessionStorage.notifications = JSON.stringify(
+                Array.from(notificationsContainer[0].children)
+                    .map(it => ({classes: it.className, text: it.innerHTML}))
+            );
             location.reload(true);
         }
 
-        window.addEventListener('load', () => {
-           window.sessionStorage.notifications.forEach(it => sendNotificationNode(it));
-        });
+       JSON.parse(window.sessionStorage.notifications).forEach(it => sendPersistentNotification(it));
+        window.sessionStorage.notifications = [];
     </script>
 
 </body>
