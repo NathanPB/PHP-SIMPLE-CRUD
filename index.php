@@ -8,6 +8,7 @@
     <title>CRUD Básico PHP</title>
     <link rel="stylesheet" href="assets/common.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="assets/index.css"/>
 </head>
 <body>
     <div class="container-fluid h-100 d-flex">
@@ -53,9 +54,11 @@
                                         <th>#</th>
                                         <th>Nome</th>
                                         <th>CPF</th>
+                                        <th>Contatos</th>
+                                        <th>Controle</th>
                                     </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody id="costumers-container">
                                         <?php
                                             $statement = $db->prepare('SELECT * FROM clientes');
                                             if($statement->execute()){
@@ -73,8 +76,31 @@
                                                                     '-'.substr($cpf, 9, 2);
                                                             ?>
                                                         </td>
+                                                        <td class="contact-list-wrapper">
+                                                            <ul class="contact-list">
+                                                                <?php
+                                                                $statementContacts = $db->prepare('select email from email where cliente = ?');
+                                                                if($statementContacts->execute(array($rs->id))){
+                                                                    while($rsTelefones = $statementContacts->fetch(PDO::FETCH_OBJ)){
+                                                                        ?>
+                                                                        <li class="contact-email"><?=$rsTelefones->email?></li>
+                                                                        <?php
+                                                                    }
+                                                                };
+                                                                $statementContacts = $db->prepare('select telefone from telefone where cliente = ?');
+                                                                if($statementContacts->execute(array($rs->id))){
+                                                                    while($rsTelefones = $statementContacts->fetch(PDO::FETCH_OBJ)){
+                                                                        ?>
+                                                                        <li class="contact-phone"><?=$rsTelefones->telefone?></li>
+                                                                        <?php
+                                                                    }
+                                                                };
+                                                                ?>
+                                                            </ul>
+                                                        </td>
                                                         <td>
-                                                            <!-- TODO botões de controle (apagar e editar) -->
+                                                            <button class="btn btn-danger" onclick="apagarCliente('<?= $rs->id ?>', this)">✗</button>
+                                                            <button class="btn btn-primary" onclick='editarCliente("<?= $rs->id ?>", <?= json_encode(array("nome" => $rs->nome, "cpf" => $rs->cpf, "nascimento" => $rs->nascimento)) ?>)' data-toggle="modal" data-target="#modalEditarClientes">✎</button>
                                                         </td>
                                                     </tr>
                                                 <?php
@@ -116,10 +142,51 @@
                             <label for="inputAdicionarNascimento">Data de Nascimento:</label>
                             <input type="date" class="form-control" name="nascimento" id="inputAdicionarNascimento" required>
                         </div>
+                        <div class="form-group">
+                            <label for="inputAdicionarTelefone">Telefone:</label>
+                            <input type="number" class="form-control" name="telefone" id="inputAdicionarTelefone">
+                        </div>
+                        <div class="form-group">
+                            <label for="inputAdicionarEmail">Email:</label>
+                            <input type="email" class="form-control" name="email" id="inputAdicionarEmail">
+                        </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" form="formAdicionarClientes" class="btn btn-primary">Enviar</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal" tabindex="-1" role="dialog" id="modalEditarClientes">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Editar Cliente</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="formEditarClientes">
+                        <input name="id" id="inputEditarId" hidden/>
+                        <div class="form-group">
+                            <label for="inputAdicionarNome">Nome:</label>
+                            <input type="text" class="form-control" name="nome" id="inputEditarNome" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputAdicionarCPF">CPF:</label>
+                            <input type="text" class="form-control" name="cpf" id="inputEditarCPF" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputAdicionarNascimento">Data de Nascimento:</label>
+                            <input type="date" class="form-control" name="nascimento" id="inputEditarNascimento" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" form="formEditarClientes" class="btn btn-primary">Enviar</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
                 </div>
             </div>
@@ -134,6 +201,8 @@
     <script>$('[data-toggle="tooltip"]').tooltip()</script>
     <script>
         $('#inputAdicionarCPF').mask('000.000.000-00');
+        $('#inputEditarCPF').mask('000.000.000-00');
+
         $('#formAdicionarClientes').on('submit', function(e){
             e.preventDefault();
 
@@ -142,13 +211,16 @@
                 sendNotification("CPF Inválido!", "alert-danger")
             } else {
                 let name = this.nome.value;
+                let email = this.email.value;
+                let telefone = this.telefone.value;
                 $.ajax({
-                    url: `api/cliente/adicionar/?nome=${name}&cpf=${cpf}&nascimento=${this.nascimento.value}`,
+                    url: `api/cliente/adicionar/?nome=${name}&cpf=${cpf}&nascimento=${this.nascimento.value}${email && '&email='+email}${telefone && '&telefone='+telefone}`,
                     success: function(responseText){
                         try {
                             let msg = JSON.parse(responseText).message;
                             if(msg === 'success'){
-                                sendNotification(`Cliente ${name} adicionado com sucesso!`, "alert-success")
+                                sendNotification(`Cliente ${name} adicionado com sucesso!`, "alert-success");
+                                refreshKeepData();
                             } else {
                                 throw msg;
                             }
@@ -161,7 +233,72 @@
                     }
                 })
             }
-        })
+        });
+        $('#formEditarClientes').on('submit', function(e){
+            e.preventDefault();
+
+            let nome = this.nome.value;
+            let cpf = this.cpf.value.replace('.', '').replace('.', '').replace('-', '');
+            if(cpf.length !== 11){
+                sendNotification("CPF Inválido!", "alert-danger")
+            } else {
+                $.ajax({
+                    url: `api/cliente/adicionar/?id=${this.id.value}&nome=${nome}&cpf=${cpf}&nascimento=${this.nascimento.value}`,
+                    success: function(responseText){
+                        try {
+                            let msg = JSON.parse(responseText).message;
+                            if(msg === 'success'){
+                                sendNotification(`Cliente ${nome} editado com sucesso!`, "alert-success");
+                                refreshKeepData();
+                            } else {
+                                throw msg;
+                            }
+                        } catch (exception) {
+                            sendNotification(`Falha ao editar ${nome}: ${exception}`, "alert-danger")
+                        }
+                    },
+                    error: function () {
+                        sendNotification(`Falha ao editar ${nome}: Unauthorized`, "alert-danger")
+                    }
+                })
+            }
+        });
+
+        function apagarCliente(id, element) {
+            $.ajax({
+                url: `api/cliente/remover/?id=${id}`,
+                success: function(response) {
+                    let r = JSON.parse(response);
+                    if(r.message === 'success'){
+                        sendNotification(`Cliente ${id} removido com sucesso`, 'alert-success');
+                    } else {
+                        sendNotification(r.message, 'alert-warning');
+                    }
+                    element.parentElement.parentElement.remove();
+                },
+                error: function(response){
+                    sendNotification(response, 'alert-danger')
+                }
+            })
+        }
+
+        function editarCliente(id, data){
+            $('#inputEditarId').val(id);
+            $('#inputEditarNome').val(data.nome);
+            $('#inputEditarCPF').val(data.cpf);
+            $('#inputEditarNascimento').val(data.nascimento);
+        }
+
+        function refreshKeepData(){
+            window.sessionStorage.notifications = JSON.stringify(
+                Array.from(notificationsContainer[0].children)
+                    .map(it => ({classes: it.className, text: it.innerHTML}))
+            );
+            location.reload(true);
+        }
+
+       JSON.parse(window.sessionStorage.notifications).forEach(it => sendPersistentNotification(it));
+        window.sessionStorage.notifications = [];
     </script>
 
 </body>
