@@ -21,24 +21,35 @@ Exemplo:
 ## Endpoints
 
 
-## api/clientes/
+## api/cliente/
 Retorna os clientes cadastrados em formato JSON.
 
 Parametros GET:
   * `id` (opcional): Retorna um cliente em específico, filtrado por ID.
 
-### api/clientes/adicionar/
+### api/cliente/adicionar/
 Adiciona ou edita um cliente ao database.
 
 Parametros GET:
  
- * ``ìd`` (Para operações de edição apenas): ID do cliente a editar.
+ * ``ìd`` (Para operações de edição apenas): ID do cliente a editar;
  * ``nome``: Nome do cliente;
  * ``cpf``: CPF do cliente. Precisa ter 11 dígitos, todos numéricos.
- * ``nascimento``: Data de nascimento do cliente. Formato: ``yyyy-mm-dd``
+ * ``nascimento``: Data de nascimento do cliente. Formato: ``yyyy-mm-dd``.
 
-### api/clientes/remover/
+### api/cliente/remover/
 Remove um cliente.
 
 Parametros GET:
+
   * ``id``: ID do cliente a remover.
+
+### api/cliente/contato/adicionar
+
+Adiciona ou edita um contato.
+
+Parametros GET:
+
+ * ``ìd`` (Para operações de edição apenas): ID do contato a editar.
+ * ``cliente`` (Para operações de adição apenas): ID do cliente a adicionar;
+ * ``value``: Valor a adicionar ou substituir.
