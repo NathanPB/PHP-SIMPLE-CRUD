@@ -79,21 +79,13 @@
                                                         <td class="contact-list-wrapper">
                                                             <ul class="contact-list">
                                                                 <?php
-                                                                $statementContacts = $db->prepare('select email from email where cliente = ?');
+                                                                $statementContacts = $db->prepare('select * from contato where cliente = ?');
                                                                 if($statementContacts->execute(array($rs->id))){
-                                                                    while($rsTelefones = $statementContacts->fetch(PDO::FETCH_OBJ)){
-                                                                        ?>
-                                                                        <li class="contact-email"><?=$rsTelefones->email?></li>
-                                                                        <?php
-                                                                    }
-                                                                };
-                                                                $statementContacts = $db->prepare('select telefone from telefone where cliente = ?');
-                                                                if($statementContacts->execute(array($rs->id))){
-                                                                    while($rsTelefones = $statementContacts->fetch(PDO::FETCH_OBJ)){
-                                                                        ?>
-                                                                        <li class="contact-phone"><?=$rsTelefones->telefone?></li>
-                                                                        <?php
-                                                                    }
+                                                                    foreach ($statementContacts as $contact) { ?>
+                                                                        <li class="contact-<?= $contact['type'] == 'T' ? 'phone' : 'email'?>">
+                                                                            <?= $contact['value'] ?>
+                                                                        </li>
+                                                                    <?php }
                                                                 };
                                                                 ?>
                                                             </ul>
