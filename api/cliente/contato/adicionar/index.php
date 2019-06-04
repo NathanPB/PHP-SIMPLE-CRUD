@@ -10,6 +10,7 @@
                     'value' => $_REQUEST['value'],
                     'id' => $_REQUEST['id']
                 ));
+                echo '{"message":"success"}';
             } else if (isset($_REQUEST['cliente'])) {
                 $sth = $db->prepare('insert into contato (value, cliente, type) values (:value, :cliente, :type)');
                 $sth->execute(array(
@@ -17,6 +18,7 @@
                     'cliente' => $_REQUEST['cliente'],
                     'type' => strpos($_REQUEST['value'], '@') != false ? 'E' : 'T'
                 ));
+                echo '{"message":"success"}';
             } else {
                 throw new Exception('missing parameters');
             }
