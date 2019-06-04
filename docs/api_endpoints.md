@@ -53,3 +53,10 @@ Parametros GET:
  * ``ìd`` (Para operações de edição apenas): ID do contato a editar.
  * ``cliente`` (Para operações de adição apenas): ID do cliente a adicionar;
  * ``value``: Valor a adicionar ou substituir.
+ 
+ ### api/cliente/contato/remover
+ 
+ Remove um contato
+ 
+ Parametros GET:
+ * ``id``: ID do contato a remover
