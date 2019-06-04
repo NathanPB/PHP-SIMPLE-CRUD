@@ -26,3 +26,7 @@ html, body {
 header {
     z-index: 1;
 }
+
+.pointer {
+    cursor: pointer;
+}

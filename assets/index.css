@@ -20,3 +20,8 @@
 .contact-phone:before {
     content: '📞'; /* Hidden Telephone Receiver unicode that is not displaying */
 }
+
+.contact-add:before {
+    content: '＋';
+    color: green;
+}
