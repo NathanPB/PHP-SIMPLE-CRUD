@@ -8,6 +8,7 @@ Pequeno software genérico baseado em web que permite administrar uma lista de c
 |----|-----------|
 | RF1  | O sistema deve manter clientes |
 | RF2  | Para acesso ao sistema deverá ser necessário autenticar-se |
+| RF3  | O sistema deve manter contatos |
 | RNF1 | **Segurança:** A API e o sistema deverão ser autenticados para evitar mudanças de pessoas não autorizadas |
 | RNF2 | **User-Friendly:** A interface deve ser de fácil utilização, com design limpo e responsivo |
 
