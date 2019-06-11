@@ -1,4 +1,4 @@
-# PHP Simple Crud | Nome não definido
+# ClientHub
 
 ## Descrição
 Pequeno software genérico baseado em web que permite administrar uma lista de clientes. Cada cliente contém um identificador numérico único, um nome, um cpf, uma data de nascimento e uma lista de contatos, que pode ser email ou telefone.
