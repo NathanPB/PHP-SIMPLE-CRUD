@@ -17,11 +17,11 @@ try {
                 $sth->execute(array($_REQUEST['nome'], $_REQUEST['cpf'], $_REQUEST['nascimento']));
 
                 if(!empty($_REQUEST['email'])){
-                    $sth = $db->prepare("INSERT INTO email (cliente, email) values ((select id from clientes where cpf = ?), ?)");
+                    $sth = $db->prepare("INSERT INTO contato (cliente, value, type) values ((select id from clientes where cpf = ?), ?, 'E')");
                     $sth->execute(array($_REQUEST['cpf'], $_REQUEST['email']));
                 }
                 if(!empty($_REQUEST['telefone'])){
-                    $sth = $db->prepare("INSERT INTO telefone (cliente, telefone) values ((select id from clientes where cpf = ?), ?)");
+                    $sth = $db->prepare("INSERT INTO contato (cliente, value, type) values ((select id from clientes where cpf = ?), ?, 'T')");
                     $sth->execute(array($_REQUEST['cpf'], $_REQUEST['telefone']));
                 }
                 echo '{"message":"success"}';
