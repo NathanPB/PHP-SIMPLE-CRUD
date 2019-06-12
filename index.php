@@ -17,7 +17,7 @@
             <div class="row">
                 <header class="col-md-12 p-0">
                     <nav class="navbar navbar-expand-md navbar-light bg-light">
-                        <a class="navbar-brand" href="index.php">PHP Simple CRUD</a>
+                        <a class="navbar-brand" href="index.php">ClientHub</a>
                         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarMain" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Expandir Navegação">
                             <span class="navbar-toggler-icon"></span>
                         </button>
