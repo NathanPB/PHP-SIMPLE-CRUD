@@ -1,6 +1,11 @@
+:root {
+    --font-multiplier: 1;
+}
+
 html, body {
     width: 100vw;
     height: 100vh;
+    font-size: calc(1em * var(--font-multiplier));
 }
 
 .main-container {

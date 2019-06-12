@@ -7,6 +7,7 @@
     <meta charset="UTF-8">
     <title>CRUD Básico PHP</title>
     <link rel="stylesheet" href="assets/common.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="assets/index.css"/>
     <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.4.0/css/bootstrap4-toggle.min.css" rel="stylesheet">
@@ -28,9 +29,17 @@
                 </header>
             </div>
             <div class="row" style="flex-grow: 1">
-                <div class="col-md-2 bg-primary left-menu">
-                    <div class="w-100 h-100 p-1" id="notification-container">
+                <div class="col-md-2 bg-primary left-menu d-flex" style="flex-direction: column">
+                    <div class="p-1" id="notification-container" style="flex-grow: 100">
 
+                    </div>
+                    <div class="btn-group btn-group-lg p-1" role="group" style="flex-grow: 1; margin: auto;">
+                        <button type="button" class="btn btn-secondary" title="Zoom In" onclick="zoomIn()">
+                            <span class="fas fa-search-minus"></span>
+                        </button>
+                        <button type="button" class="btn btn-secondary" title="Zoom Out" onclick="zoomOut()">
+                            <span class="fas fa-search-plus"></span>
+                        </button>
                     </div>
                 </div>
                 <div class="col-md-10">
@@ -241,6 +250,7 @@
     <script>$('[data-toggle="tooltip"]').tooltip()</script>
     <script>
         let editarContatoMode = 'adicionar';
+        let fontMultiplier = 1;
 
         $('#inputAdicionarCPF').mask('000.000.000-00');
         $('#inputEditarCPF').mask('000.000.000-00');
@@ -397,6 +407,20 @@
 
        JSON.parse(window.sessionStorage.notifications).forEach(it => sendPersistentNotification(it));
         window.sessionStorage.notifications = [];
+
+        function zoomIn() {
+            fontMultiplier -= 0.1;
+            updateZoom()
+        }
+
+        function zoomOut() {
+            fontMultiplier += 0.1;
+            updateZoom();
+        }
+
+        function updateZoom() {
+            document.documentElement.style.setProperty('--font-multiplier', fontMultiplier);
+        }
     </script>
 
 </body>
